@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View</title>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='img/favicon.ico') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+        <a href="/"
+          ><img
+            src="{{ url_for('static', filename='img/leap.png') }}"
+            alt="KeyMG"
+        /></a>
+      </div>
+      <div class="buttons">
+        <h2><a href="/">Home</a></h2>
+        <h2 class="active"><a href="/view">View</a></h2>
+      </div>
+    </nav>
+  </body>
+</html>
