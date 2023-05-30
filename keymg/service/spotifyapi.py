@@ -29,8 +29,8 @@ dicc_camelotkey = {(0,1):'8B',
 
 dicc_camelotkey_inverted = {v: k for k, v in dicc_camelotkey.items()}
 
-client_id = "dd8b1ed2c16844d18485ecc80fde5979"
-client_secret = "444234464fd14f74bdc51a96c31253a9"
+client_id = ""
+client_secret = ""
 
 def get_token():
     auth_string = client_id + ":" + client_secret
