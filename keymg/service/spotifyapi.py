@@ -37,6 +37,10 @@ client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 
 def get_token():
+    """
+    Obtener el token para request a la API de Spotify
+    """
+
     auth_string = client_id + ":" + client_secret
     auth_bytes = auth_string.encode("utf-8")
     auth_base64 = str(base64.b64encode(auth_bytes), "utf-8")
@@ -58,6 +62,9 @@ def get_auth_header(token):
 
 
 def search_for_id_track(token, name_song):
+    """
+    Obtiene una lista de posibles canciones que coinciden con el nombre de la canción
+    """
 
     url = "https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
@@ -85,7 +92,12 @@ def search_for_id_track(token, name_song):
     return list_songs
 
 
+
 def get_info_song(token, id_song):
+    """
+    Obtiene información de la canción
+    """
+
     search_info_song = dict()
 
     query_url = f"https://api.spotify.com/v1/tracks/{id_song}"
@@ -109,11 +121,18 @@ def get_info_song(token, id_song):
     minutes = int(duration_seconds // 60)
     seconds = int(duration_seconds % 60)
     search_info_song['duration'] = str(minutes) + ":" + str(seconds)
+
+    search_info_song['key'], search_info_song['mode'], search_info_song['bpm'], search_info_song['camelot_key'] = search_for_audio_features(token, id_song)
+
     return search_info_song
 
 
 
 def search_for_audio_features(token, id_song):
+    """
+    Obtiene el key, mode, bpm y el camelot key de una canción por el id_song
+    """
+
     query_url = f"https://api.spotify.com/v1/audio-features/{id_song}"
     headers = get_auth_header(token)
 
@@ -130,6 +149,10 @@ def search_for_audio_features(token, id_song):
 
 
 def search_songs_for_key_bpm(token, list_harmonic_key_mode, min_bpm, max_bpm, genre):
+    """
+    Busca las canciones que coinciden con los criterios de key y bpm para que combinen armónicamente
+    """
+
     for i in range(len(list_harmonic_key_mode)):
         url = "https://api.spotify.com/v1/recommendations"
         headers = get_auth_header(token)
@@ -148,6 +171,10 @@ def search_songs_for_key_bpm(token, list_harmonic_key_mode, min_bpm, max_bpm, ge
 
 
 def search_genres(token):
+    """
+    Busca los géneros posibles en Spotify
+    """
+
     query_url = f"https://api.spotify.com/v1/recommendations/available-genre-seeds"
     headers = get_auth_header(token)
 
@@ -157,6 +184,10 @@ def search_genres(token):
 
 
 def armonic_search_key_bpm(token, key, mode, bpm, accepted_bpm):
+    """
+    Busca las tonalidades y bpm posibles para que combinen armónicamente con la canción solicitada
+    """
+
     harmonic_camelot_key = []
     harmonic_key_mode = []
     camelot_key = dicc_camelotkey[(key, mode)]
@@ -189,24 +220,12 @@ def armonic_search_key_bpm(token, key, mode, bpm, accepted_bpm):
     return harmonic_camelot_key, harmonic_key_mode, min_bpm, max_bpm
 
 
-def get_info_track(token, id_song):
-    query_url = f"https://api.spotify.com/v1/tracks/{id_song}"
-    headers = get_auth_header(token)
-
-    result = get(query_url, headers=headers)
-    track_info = json.loads(result.content)
-
-    print(track_info)
-
-    # key = tracks_features['key']
-    # mode = tracks_features['mode']
-    # bpm = tracks_features['tempo']
-    
-    # print("Key: {}, Mode: {}, BPM (tempo): {}".format(key, mode, bpm))
-    # return key, mode, bpm
-
 
 def get_songs_of_playlist(token, id_playlist):
+    """
+    Obtiene la info de las canciones de una playlist
+    """
+
     songs = list()
     info_song = dict()
     query_url = f"https://api.spotify.com/v1/playlists/{id_playlist}"
@@ -241,6 +260,10 @@ def get_songs_of_playlist(token, id_playlist):
 
 
 def harmonic_songs_of_playlist(token, songs):
+    """
+    Valida que las canciones consecutivas combinen armónicamente
+    """
+    
     combinations = list()
     for i in range(len(songs)):
         if i < len(songs) - 1:
@@ -264,37 +287,6 @@ def harmonic_songs_of_playlist(token, songs):
             print(harmonic_camelot_key)
             print("Next song camelot key: {}".format(songs[i+1]['camelot_key']))
 
-
-
-
-def get_info_song(token, id_song):
-    search_info_song = dict()
-
-    query_url = f"https://api.spotify.com/v1/tracks/{id_song}"
-    headers = get_auth_header(token)
-
-    result = get(query_url, headers=headers)
-    json_song = json.loads(result.content)
-    
-    search_info_song['id_song'] = id_song
-    search_info_song['name_song'] = json_song['name']
-    search_info_song['name_album'] = json_song['album']['name']
-
-    search_info_song['artists'] = list()
-    for j in range(len(json_song['artists'])):
-            search_info_song['artists'].append(json_song['artists'][j]['name'])
-
-    
-    search_info_song['url'] = json_song['external_urls']['spotify']
-    search_info_song['image'] = json_song['album']['images'][0]['url']
-    duration_seconds = json_song['duration_ms'] / 1000
-    minutes = int(duration_seconds // 60)
-    seconds = int(duration_seconds % 60)
-    search_info_song['duration'] = str(minutes) + ":" + str(seconds)
-
-    search_info_song['key'], search_info_song['mode'], search_info_song['bpm'], search_info_song['camelot_key'] = search_for_audio_features(token, id_song)
-
-    return search_info_song
 
 
 #-----------------------------------------------------------------------------------------------
