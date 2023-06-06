@@ -2,7 +2,6 @@ import base64
 from requests import post, get
 import json
 import os
-from dotenv import load_dotenv
 
 dicc_camelotkey = {(0,1):'8B',
 		(1,1):'3B',
@@ -31,10 +30,8 @@ dicc_camelotkey = {(0,1):'8B',
 
 dicc_camelotkey_inverted = {v: k for k, v in dicc_camelotkey.items()}
 
-load_dotenv()
-
-client_id = os.getenv("CLIENT_ID")
-client_secret = os.getenv("CLIENT_SECRET")
+client_id = "dd8b1ed2c16844d18485ecc80fde5979"
+client_secret = "444234464fd14f74bdc51a96c31253a9"
 
 def get_token():
     """

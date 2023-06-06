@@ -1,6 +1,6 @@
 from flask import Flask
 from .extensions import *
-from .routes import index_blueprint, discover_blueprint, community_blueprint, about_us_blueprint
+from .routes import index_blueprint, discover_blueprint, community_blueprint, about_us_blueprint, api_blueprint
 from .domain.User import User
 
 def create_app():
@@ -23,5 +23,6 @@ def create_app():
         app.register_blueprint(discover_blueprint)
         app.register_blueprint(community_blueprint)
         app.register_blueprint(about_us_blueprint)
+        app.register_blueprint(api_blueprint)
     
     return app

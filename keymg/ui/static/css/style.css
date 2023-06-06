@@ -336,6 +336,25 @@ section{
   border-radius: 50%;
 }
 
+#autocomplete-container {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 500px;
+  background-color: var(--textColor);
+  color: var(--bgColor);
+}
+
+#autocomplete-container li {
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#autocomplete-container li:hover {
+  background-color: #f0f0f0;
+}
+
 .card{
   display: flex;
   flex-direction: row;
