@@ -1,0 +1,307 @@
+{% extends "base.html" %} {% block head %}
+<title>Community</title>
+{% endblock %} {% block body %}
+<section class="banner-community">
+  <div class="background"></div>
+  <div class="content">
+    <h2>Do you need inspiration?</h2>
+    <h1>Navigate in our Community</h1>
+  </div>
+</section>
+<section class="trending">
+  <h2>Trending right now!</h2>
+  <div class="playlist">
+    <div class="user">
+      <div class="user-details">
+        <div class="user-img">
+          <img
+            src="{{ url_for('static', filename='img/allen.jpg') }}"
+            alt="Allen Rou"
+          />
+        </div>
+        <span>Allen Rou</span>
+      </div>
+      <div class="buttons">
+        <img
+          id="favorite"
+          src="{{ url_for('static', filename='img/heart.svg') }}"
+          alt="Favorite"
+        />
+        <img
+          id="share"
+          src="{{ url_for('static', filename='img/share-outline.svg') }}"
+          alt="Share"
+        />
+        <img
+          id="link"
+          src="{{ url_for('static', filename='img/link-outline.svg') }}"
+          alt="Spotify"
+        />
+      </div>
+    </div>
+    <div class="details">
+      <h3>Melodic Techno Mix 2023</h3>
+      <p>
+        Get ready to lose yourself in the hypnotic sounds of melodic techno with
+        a DJ set mixed by Jphanx, featuring some of the most visionary artists
+        in the genre, including AYOR, Basto, BROHUG, JVKE, Galantis, and more.
+      </p>
+      <div class="tracks">
+        <h4>Tracks</h4>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art1.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>AYOR - Chemicals</span>
+          </div>
+          <div class="right">
+            <p>3A</p>
+            <p>128BPM</p>
+            <p>04:21</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art2.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Basto - Dangerous Stuff</span>
+          </div>
+          <div class="right">
+            <p>4A</p>
+            <p>128BPM</p>
+            <p>03:18</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art3.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>BROHUG - Fake Fake Fake</span>
+          </div>
+          <div class="right">
+            <p>4B</p>
+            <p>126BPM</p>
+            <p>02:23</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art4.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Galantis & JVKE - Dandelion</span>
+          </div>
+          <div class="right">
+            <p>5B</p>
+            <p>126BPM</p>
+            <p>03:12</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art5.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span
+              >Lost Capital & Cr3on feat. Joselyn Rivera - The Way It Was</span
+            >
+          </div>
+          <div class="right">
+            <p>5A</p>
+            <p>128BPM</p>
+            <p>04:01</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art6.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Maazel - Dead Inside</span>
+          </div>
+          <div class="right">
+            <p>4A</p>
+            <p>130BPM</p>
+            <p>02:43</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art7.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>THEALBERTOZ - Be With Me (feat. Zero Void)</span>
+          </div>
+          <div class="right">
+            <p>3A</p>
+            <p>135BPM</p>
+            <p>03:32</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="playlist">
+    <div class="user">
+      <div class="user-details">
+        <div class="user-img">
+          <img
+            src="{{ url_for('static', filename='img/noel.jpg') }}"
+            alt="Allen Rou"
+          />
+        </div>
+        <span>Noel Evitt</span>
+      </div>
+      <div class="buttons">
+        <img
+          id="favorite"
+          src="{{ url_for('static', filename='img/heart.svg') }}"
+          alt="Favorite"
+        />
+        <img
+          id="share"
+          src="{{ url_for('static', filename='img/share-outline.svg') }}"
+          alt="Share"
+        />
+        <img
+          id="link"
+          src="{{ url_for('static', filename='img/link-outline.svg') }}"
+          alt="Spotify"
+        />
+      </div>
+    </div>
+    <div class="details">
+      <h3>Eurodance 90s Party Mix</h3>
+      <p>
+        Tinzo's DJ mix is a mesmerizing trip down memory lane, seamlessly
+        blending classic y2k dance hits with a modern twist. In the dark and
+        moody basement setting in Brooklyn, her music transports the audience
+        back to a simpler time when dance parties ruled the world. Tinzo's
+        energetic set includes iconic tracks like Captain Jack and It Feels So
+        Good, infusing the crowd with a contagious energy that keeps them moving
+        and grooving all night long. As part of Book Club Radio, this music
+        party disguised as a book club brings together people from all walks of
+        life to celebrate the power of music and dance.
+      </p>
+      <div class="tracks">
+        <h4>Tracks</h4>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art8.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Tiësto & 7 Skies - My Frequency feat. RebMoe</span>
+          </div>
+          <div class="right">
+            <p>9A</p>
+            <p>130BPM</p>
+            <p>02:15</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art9.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Quarantino - Broken Love</span>
+          </div>
+          <div class="right">
+            <p>10A</p>
+            <p>130BPM</p>
+            <p>03:13</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art10.jpeg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Porter Robinson - Something Comforting</span>
+          </div>
+          <div class="right">
+            <p>11A</p>
+            <p>132BPM</p>
+            <p>04:34</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art11.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Sofus Wiene - Wanna Know Your Name</span>
+          </div>
+          <div class="right">
+            <p>11B</p>
+            <p>130BPM</p>
+            <p>04:26</p>
+          </div>
+        </div>
+        <div class="track">
+          <div class="left">
+            <div class="cover-art">
+              <img
+                src="{{ url_for('static', filename='img/art5.jpg') }}"
+                alt="Cover Art"
+              />
+            </div>
+            <span>Slushii - Candy Flip</span>
+          </div>
+          <div class="right">
+            <p>12B</p>
+            <p>128BPM</p>
+            <p>02:15</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="new-playlist">
+  <div id="spotify" class="hidden">Using Spotify Playlist</div>
+  <div id="discover" class="hidden"><a href="/discover">Using our app</a></div>
+  <div id="plus" class="plus-button">
+    <img
+      src="{{ url_for('static', filename='img/plus.svg') }}"
+      alt="New playlist"
+    />
+  </div>
+</div>
+<!-- Additional content specific to the homepage -->
+{% endblock %}

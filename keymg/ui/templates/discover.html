@@ -1,0 +1,106 @@
+{% extends "base.html" %} {% block head %}
+<title>Discover</title>
+{% endblock %} {% block body %}
+<section class="banner">
+  <div class="background"></div>
+  <div class="content">
+    <h1>Ready to <span id="dynamicText">search</span>?</h1>
+    <p>
+      Welcome to our ultimate playlist creation experience. Whether you're
+      looking to set the mood for a party, boost your workout routine, or simply
+      unwind after a long day, we've got you covered. With our innovative
+      platform, you have the power to curate personalized playlists that
+      perfectly match your musical taste and desired vibe.
+    </p>
+    <div class="search-container">
+      <input
+        type="text"
+        name="search"
+        id="search"
+        placeholder="Search a song"
+      />
+      <button type="submit">
+        <img
+          src="{{ url_for('static', filename='img/search.svg') }}"
+          alt="Search"
+        />
+      </button>
+    </div>
+  </div>
+  <svg class="mask" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <mask id="circle-mask">
+        <rect width="100%" height="100%" fill="black" />
+        <circle class="circle" cx="50%" cy="50%" r="100" fill="white" />
+      </mask>
+    </defs>
+    <image
+      xlink:href="{{ url_for('static', filename='img/banner.jpeg') }}"
+      width="100%"
+      height="100%"
+      mask="url(#circle-mask)"
+    />
+  </svg>
+</section>
+<!--
+<section class="content">
+  <div class="card">
+    <div class="left">
+      <h2>Title</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, est ipsam?
+        Quis possimus dicta odio dolor tenetur laboriosam quibusdam excepturi
+        accusantium. Consectetur maiores suscipit reiciendis sed consequatur vel
+        delectus culpa!
+      </p>
+      <button>Add to list</button>
+    </div>
+    <div class="right">
+      <img
+        src="{{ url_for('static', filename='img/vector.png') }}"
+        alt="song"
+      />
+    </div>
+  </div>
+  <div class="card">
+    <div class="left">
+      <h2>Title</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, est ipsam?
+        Quis possimus dicta odio dolor tenetur laboriosam quibusdam excepturi
+        accusantium. Consectetur maiores suscipit reiciendis sed consequatur vel
+        delectus culpa!
+      </p>
+      <button>Add to list</button>
+    </div>
+    <div class="right">
+      <div class="imagen">
+        <img
+          src="{{ url_for('static', filename='img/vector.png') }}"
+          alt="song"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="left">
+      <h2>Title</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui, est ipsam?
+        Quis possimus dicta odio dolor tenetur laboriosam quibusdam excepturi
+        accusantium. Consectetur maiores suscipit reiciendis sed consequatur vel
+        delectus culpa!
+      </p>
+      <button>Add to list</button>
+    </div>
+    <div class="right">
+      <img
+        src="{{ url_for('static', filename='img/vector.png') }}"
+        alt="song"
+      />
+    </div>
+  </div>
+</section>
+-->
+<script src="{{ url_for('static', filename='js/animation.js') }}"></script>
+{% endblock %}

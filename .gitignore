@@ -19,6 +19,6 @@ build/
 *.swp
 #~
 ~#
-
+*.psd
 venv/
 .venv/
