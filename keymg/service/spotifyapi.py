@@ -216,7 +216,7 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
     if len(songs) == 0:
         url = "https://api.spotify.com/v1/recommendations"
         headers = get_auth_header(token)
-        query = f"?seed_tracks={info_song_search['id_song']}&limit=40"
+        query = f"?seed_tracks={info_song_search['id_song']}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=40"
 
         query_url = url + query
         result = get(query_url, headers=headers)
