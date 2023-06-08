@@ -2,6 +2,9 @@ import base64
 from requests import post, get
 import json
 import os
+from dotenv import load_dotenv
+import random
+import itertools
 
 dicc_camelotkey = {(0,1):'8B',
 		(1,1):'3B',
@@ -30,8 +33,10 @@ dicc_camelotkey = {(0,1):'8B',
 
 dicc_camelotkey_inverted = {v: k for k, v in dicc_camelotkey.items()}
 
-client_id = "dd8b1ed2c16844d18485ecc80fde5979"
-client_secret = "444234464fd14f74bdc51a96c31253a9"
+load_dotenv()
+
+client_id = os.getenv("CLIENT_ID")
+client_secret = os.getenv("CLIENT_SECRET")
 
 def get_token():
     """
@@ -84,6 +89,8 @@ def search_for_id_track(token, name_song):
         for j in range(len(json_result['tracks']['items'][i]['artists'])):
                 dicc_song['name_artist'].append(json_result['tracks']['items'][i]['artists'][j]['name'])
 
+        dicc_song['url'] = json_result['tracks']['items'][i]['album']['images'][0]['url']
+
         list_songs.append(dicc_song)
 
     return list_songs
@@ -107,10 +114,20 @@ def get_info_song(token, id_song):
     search_info_song['name_song'] = json_song['name']
     search_info_song['name_album'] = json_song['album']['name']
 
+    genres_song = list()
     search_info_song['artists'] = list()
     for j in range(len(json_song['artists'])):
+            genres_song.append(search_genre_artist(token, json_song['artists'][j]['id']))
+            # search_info_song['id_artists'].append(json_song['artists'][j]['id'])
             search_info_song['artists'].append(json_song['artists'][j]['name'])
+    
+    genres_song = itertools.chain(*genres_song)
+    genres_song = list(set(genres_song))
 
+    if len(genres_song) > 5:
+        genres_song = random.sample(population=genres_song, k=5)
+
+    search_info_song['genres_to_search'] = genres_song
     
     search_info_song['url'] = json_song['external_urls']['spotify']
     search_info_song['image'] = json_song['album']['images'][0]['url']
@@ -145,7 +162,7 @@ def search_for_audio_features(token, id_song):
     return key, mode, bpm, camelot_key, tracks_features
 
 
-def search_songs_for_key_bpm(token, list_harmonic_key_mode, min_bpm, max_bpm, genre):
+def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, min_bpm, max_bpm, genres):
     """
     Busca las canciones que coinciden con los criterios de key y bpm para que combinen armónicamente
     """
@@ -155,13 +172,14 @@ def search_songs_for_key_bpm(token, list_harmonic_key_mode, min_bpm, max_bpm, ge
         headers = get_auth_header(token)
         key = list_harmonic_key_mode[j][0]
         mode = list_harmonic_key_mode[j][1]
-        query = f"?seed_genres={genre}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=10"
+
+        genres_to_search = ','.join(genres)
+        query = f"?seed_genres={genres_to_search}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=15"
 
         query_url = url + query
         result = get(query_url, headers=headers)
         result = json.loads(result.content)
-        # print("--------------------------------------------------------------------------------------------------------------")
-        # print(result)
+        
         print("For {}:".format(dicc_camelotkey.get(list_harmonic_key_mode[j])))
         for i in range(len(result['tracks'])):
             info_song = dict()
@@ -193,6 +211,38 @@ def search_songs_for_key_bpm(token, list_harmonic_key_mode, min_bpm, max_bpm, ge
                 songs.append(info_song)
             else:
                 pass
+
+
+    if len(songs) == 0:
+        url = "https://api.spotify.com/v1/recommendations"
+        headers = get_auth_header(token)
+        query = f"?seed_tracks={info_song_search['id_song']}&limit=40"
+
+        query_url = url + query
+        result = get(query_url, headers=headers)
+        result = json.loads(result.content)
+
+        for i in range(len(result['tracks'])):
+            info_song = dict()
+            name_song = result['tracks'][i]['name']
+            print("Song {}: {}".format(i+1, name_song))
+
+            info_song['id_song'] = result['tracks'][i]['id']
+            info_song['name_song'] = result['tracks'][i]['name']
+            info_song['key'], info_song['mode'], info_song['bpm'], info_song['camelot_key'], tracks_features = search_for_audio_features(token, info_song['id_song'])
+            info_song['name_album'] = result['tracks'][i]['album']['name']
+            info_song['artists'] = list()
+            for j in range(len(result['tracks'][i]['artists'])):
+                    info_song['artists'].append(result['tracks'][i]['artists'][j]['name'])
+            
+            info_song['url'] = result['tracks'][i]['external_urls']['spotify']
+            info_song['image'] = result['tracks'][i]['album']['images'][0]['url']
+            duration_seconds = result['tracks'][i]['duration_ms'] / 1000
+            minutes = int(duration_seconds // 60)
+            seconds = int(duration_seconds % 60)
+            info_song['duration'] = str(minutes) + ":" + str(seconds)
+            songs.append(info_song)
+        
 
     return songs
 
@@ -333,14 +383,47 @@ def harmonic_songs_of_playlist(token, songs):
     return combinations
 
 
+def search_genre_artist(token, id_artist):
+    """
+    Obtiene el género del artista
+    """
+
+    query_url = f"https://api.spotify.com/v1/artists/{id_artist}"
+    headers = get_auth_header(token)
+
+    result = get(query_url, headers=headers)
+    info_artist = json.loads(result.content)
+
+    genres = info_artist['genres']
+
+    return genres
+
+
+
+# def search_genre_album(token, id_album):
+#     """
+#     Obtiene el género del artista
+#     """
+
+#     query_url = f"https://api.spotify.com/v1/albums/{id_album}"
+#     headers = get_auth_header(token)
+
+#     result = get(query_url, headers=headers)
+#     info_album = json.loads(result.content)
+#     print(info_album)
+
+#     # genre = info_album['genres']
+
+#     # return genre
+
 
 #-----------------------------------------------------------------------------------------------
 
 token = get_token()
 # id_song, name_song, name_album, name_artist = search_for_id_track(token, "Animals")
-# songs = search_for_id_track(token, "Levels")
+# songs = search_for_id_track(token, "Clarity")
 # print(songs)
-# id_song = songs[1]['id_song']
+# id_song = songs[0]['id_song']
 # info_song = get_info_song(token, id_song)
 # print(info_song)
 # key, mode, bpm = search_for_audio_features(token, id_song)
@@ -348,13 +431,20 @@ token = get_token()
 # get_info_track(token, id_song)
 
 # harmonic_camelot_key, harmonic_key_mode, min_bpm, max_bpm = harmonic_search_key_bpm(token, info_song['key'], info_song['mode'], info_song['bpm'], 5)
-# songs_harmonic = search_songs_for_key_bpm(token, harmonic_key_mode, min_bpm, max_bpm, 'progressive-house')
+# songs_harmonic = search_songs_for_key_bpm(token, info_song, harmonic_key_mode, min_bpm, max_bpm, info_song['genres_to_search'])
 # print(songs_harmonic)
 # harmonic_search_key_bpm(token, 5, 0, 120, 5)
 
-# playlist, songs = get_songs_of_playlist(token, "6N4xnJocR3kV4JF37mtqXu")
-# print(playlist)
+# playlist, songs = get_songs_of_playlist(token, "3YeajqIAyj4wpRF28r200x")
+# print(songs)
 # get_songs_of_playlist(token, "6ViSThD6IjBMKBnmtzDipB")
 # combinations = harmonic_songs_of_playlist(token, songs)
 # print("----------------------------")
 # print(combinations)
+
+# search_genres(token)
+# search_genre_artist(token, "2LRoIwlKmHjgvigdNGBHNo")
+# search_genre_artist(token, "1vCWHaC5f2uS3yhpwWbIA6")
+# genres = search_genre_artist(token, "2LRoIwlKmHjgvigdNGBHNo")
+# print(genres)
+# search_genre_album(token, "1OEGfToF7QbjUgyxMAnGXg")
