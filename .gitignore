@@ -13,7 +13,7 @@ htmlcov/
 dist/
 build/
 *.egg-info/
-
+*.env
 *.log*
 .idea/*
 *.swp

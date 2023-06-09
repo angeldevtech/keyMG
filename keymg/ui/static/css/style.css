@@ -105,7 +105,10 @@ header .user-section .user-profile{
 }
 
 header .user-section .user-profile .profile-img{
-  width: 40px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 header .user-section .user-profile .profile-img img{
@@ -462,8 +465,8 @@ section{
 }
 
 .trending .playlist .user .user-details .user-img{
-  width: 200px;
-  height: 200px;
+  width: 12vw;
+  height: 12vw;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -622,6 +625,106 @@ section{
 .new-playlist .plus-button img:hover{
   transform: rotate(-90deg);
   transform-origin: center;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #242424;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #161616;
+  width: 30%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content .title{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-content .title h2 {
+  font-size: 24px;
+}
+
+.modal-content .search{
+  display: flex;
+  align-items: center;
+  width: auto;
+  border-radius: 25px;
+  background-color: #f1f1f1;
+  padding: 5px;
+  margin-bottom: 20px;
+}
+
+.modal-content .search input{
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: transparent;
+}
+
+.modal-content .buttons{
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.modal-content .buttons div{
+  cursor: pointer;
+  border-radius: 50px;
+  height: 50px;
+  border: 1px solid var(--textColor);
+  text-align: left;
+  line-height: 50px;
+  padding: 0px 16px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.modal-content .buttons #btnSave{
+  background: var(--neonGreen);
+  color: var(--textColor);
+  border: none;
+}
+
+.modal-content .response{
+  font-size: 12px;
+}
+
+.modal-content .response h3{
+  text-align: center;
+  font-size: 16px;
+}
+
+.close {
+  color: var(--textColor);
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #aaa;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 /* About Us */

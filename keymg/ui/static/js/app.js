@@ -14,22 +14,9 @@ window.onscroll = function() {
   prevScrollpos = currentScrollPos;
 };
 
-// New Playlist
-
-const plusButton = document.getElementById('plus');
-const button1 = document.getElementById('spotify');
-const button2 = document.getElementById('discover');
-
-if (plusButton != null){
-  plusButton.addEventListener('click', function() {
-    button1.classList.toggle('visible');
-    button2.classList.toggle('visible');
-  });
-}
-
 // API handling
 
-const request = (url) => {
+const requesta = (url) => {
   const request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
   request.open("GET", url, true);
   request.send();

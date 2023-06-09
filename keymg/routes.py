@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from .controllers import *
 
 index_blueprint = Blueprint("index", "index", url_prefix="/")
@@ -21,3 +21,11 @@ def endpoint_handler_autocomplete():
 @api_blueprint.route('/search', methods=['GET'])
 def endpoint_handler_search():
     return search()
+
+@api_blueprint.route('/spotify-playlist', methods=['GET'])
+def endpoint_handler_spotify_playlist():
+    return spotify_playlist()
+
+@api_blueprint.route('/playlists', methods=['GET'])
+def endpoint_handler_playlist():
+    return playlists()

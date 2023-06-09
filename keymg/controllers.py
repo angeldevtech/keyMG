@@ -22,3 +22,20 @@ def autocomplete():
 
 def search():
     return 1
+
+def spotify_playlist():
+    data = request.args.get('playlist')
+    token = get_token()
+    response = check_playlist(token=token,url=data)
+    if (response == None):
+        return jsonify(message='Ups! There is an error with the URL or is already added')
+    if (response == True):
+        return jsonify(message='Playlist successfully created')
+    else:
+        data = {}
+        data['message'] = 'Ups! Some songs do not mix harmonically'
+        data['songs'] = response
+        return jsonify(data)
+    
+def playlists():
+    return jsonify(load_playlists())

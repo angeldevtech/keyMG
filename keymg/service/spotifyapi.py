@@ -5,6 +5,13 @@ import os
 from dotenv import load_dotenv
 import random
 import itertools
+import re
+from ..domain.Playlist import Playlist
+from ..domain.Song import Song
+from ..domain.User import User
+import sys
+this_path = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, this_path)
 
 dicc_camelotkey = {(0,1):'8B',
 		(1,1):'3B',
@@ -96,7 +103,6 @@ def search_for_id_track(token, name_song):
     return list_songs
 
 
-
 def get_info_song(token, id_song):
     """
     Obtiene información de la canción
@@ -141,7 +147,6 @@ def get_info_song(token, id_song):
     return search_info_song
 
 
-
 def search_for_audio_features(token, id_song):
     """
     Obtiene el key, mode, bpm y el camelot key de una canción por el id_song
@@ -158,7 +163,7 @@ def search_for_audio_features(token, id_song):
     bpm = tracks_features['tempo']
     camelot_key = dicc_camelotkey[(key, mode)]
     
-    print("Key: {}, Mode: {}, Camelot Key: {},  BPM (tempo): {}".format(key, mode, camelot_key, bpm))
+    #print("Key: {}, Mode: {}, Camelot Key: {},  BPM (tempo): {}".format(key, mode, camelot_key, bpm))
     return key, mode, bpm, camelot_key, tracks_features
 
 
@@ -247,7 +252,6 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
     return songs
 
 
-
 def search_genres(token):
     """
     Busca los géneros posibles en Spotify
@@ -286,7 +290,7 @@ def harmonic_search_key_bpm(token, key, mode, bpm, accepted_bpm):
         harmonic_camelot_key.append(numeric_key + "B")
     else:
         harmonic_camelot_key.append(numeric_key + "A")
-    print(harmonic_camelot_key)
+    #print(harmonic_camelot_key)
 
     min_bpm = bpm - accepted_bpm
     max_bpm = bpm + accepted_bpm
@@ -296,7 +300,6 @@ def harmonic_search_key_bpm(token, key, mode, bpm, accepted_bpm):
     
 
     return harmonic_camelot_key, harmonic_key_mode, min_bpm, max_bpm
-
 
 
 def get_songs_of_playlist(token, id_playlist):
@@ -368,17 +371,18 @@ def harmonic_songs_of_playlist(token, songs):
             key_next = songs[i+1]['key']
             mode_next = songs[i+1]['mode']
             bpm_next = songs[i+1]['bpm']
-            if ((key_next, mode_next) in harmonic_key_mode) and (bpm_next <= max_bpm and bpm_next >= min_bpm):
-                print("YES - Harmonic mixing between song {} ({}) and {} ({})".format(i+1, songs[i]['name_song'], i+2, songs[i+1]['name_song']))
-                combinations.append(1)
-            else:
-                print("NO - Harmonic mixing between song {} ({}) and {} ({})".format(i+1, songs[i]['name_song'], i+2, songs[i+1]['name_song']))
-                combinations.append(0)
+            if not ((key_next, mode_next) in harmonic_key_mode) and (bpm_next <= max_bpm and bpm_next >= min_bpm):
+                #print("YES - Harmonic mixing between song {} ({}) and {} ({})".format(i+1, songs[i]['name_song'], i+2, songs[i+1]['name_song']))
+                #combinations.append(1)
+                combinations.append("No harmonic mixing between song '" + songs[i]['name_song'] + "' and '" + songs[i+1]['name_song'] + "'")
+            #else:
+                #print("NO - Harmonic mixing between song {} ({}) and {} ({})".format(i+1, songs[i]['name_song'], i+2, songs[i+1]['name_song']))
+                #combinations.append(0)
 
-            print("Harmonic mixed: Actual song camelot key: {}".format(songs[i]['camelot_key']))
-            print("Camelot key allowed: ")
-            print(harmonic_camelot_key)
-            print("Next song camelot key: {}".format(songs[i+1]['camelot_key']))
+            #print("Harmonic mixed: Actual song camelot key: {}".format(songs[i]['camelot_key']))
+            #print("Camelot key allowed: ")
+            #print(harmonic_camelot_key)
+            #print("Next song camelot key: {}".format(songs[i+1]['camelot_key']))
 
     return combinations
 
@@ -440,6 +444,55 @@ def add_songs2_playlist(token, playlist_id, song_ids):
 
     print(info_added_songs2)
 
+
+def check_playlist(token, url):
+    playlists_dir = os.path.join(this_path, 'playlists')
+    pattern = r"playlist/([\w\d]+)"
+    id_playlist = re.search(pattern, url).group(1)
+    if (id_playlist == None or id_playlist == '' or validateDuplicate(url=url)):
+        return None
+    playlist, songs = get_songs_of_playlist(token=token, id_playlist=id_playlist)
+    combinations = harmonic_songs_of_playlist(token, songs)
+    if (len(combinations) > 0):
+        return combinations
+    newSongsList = []
+    for song in songs:
+        s = Song(id=song['id_song'],
+                 name=song['name_song'],
+                 artist=', '.join(song['artists']),
+                 album=song['name_album'],
+                 key=song['camelot_key'],
+                 bpm=song['bpm'],
+                 duration=song['duration'],
+                 image=song['image'],
+                 url=song['url'])
+        newSongsList.append(s)
+    newPlaylist = Playlist(name=playlist['name'], description=playlist['description'], user=User('Angel Q.'), songs=newSongsList, link=url)
+    newPlaylist.save_json(playlists_dir)
+    return True
+
+def validateDuplicate(url):
+    playlists_dir = os.path.join(this_path, 'playlists')
+    json_files = [filename for filename in os.listdir(playlists_dir) if filename.endswith('.json')]
+    for filename in json_files:
+        filepath = os.path.join(playlists_dir, filename)
+        playlist = Playlist.from_json(filepath)
+        if(playlist.link == url):
+            return True
+    return False
+
+def load_playlists():
+    playlists_dir = os.path.join(this_path, 'playlists')
+    json_files = [filename for filename in os.listdir(playlists_dir) if filename.endswith('.json')]
+
+    json_files = json_files[:10]
+
+    playlists = []
+    for filename in json_files:
+        filepath = os.path.join(playlists_dir, filename)
+        playlist = Playlist.from_json(filepath)
+        playlists.append(playlist)
+    return playlists
 
 # def search_genre_album(token, id_album):
 #     """
