@@ -399,6 +399,47 @@ def search_genre_artist(token, id_artist):
     return genres
 
 
+def create_playlist(token, user_id, name_playlist, description):
+    """
+    Crear la playlist al usuario logeado
+    """
+
+    query_url = f"https://api.spotify.com/v1/users/{user_id}/playlists"
+    headers = get_auth_header(token)
+    data = json.dumps({
+            "name": name_playlist,
+            "description": description,
+            "public": True
+        })
+
+    result = post(query_url, data=data, headers=headers)
+    info_playlist = json.loads(result.content)
+    playlist_id = info_playlist['id']
+
+    return playlist_id
+
+
+def add_songs2_playlist(token, playlist_id, song_ids):
+    """
+    Añadir canciones a la playlist
+    """
+
+    query_url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+    headers = get_auth_header(token)
+    songs_uri = list()
+    for song_id in song_ids:
+        song_uri = "spotify:track:" + song_id
+        songs_uri.append(song_uri)
+
+    data = json.dumps({
+            "uris": songs_uri
+        })
+
+    result = post(query_url, data=data, headers=headers)
+    info_added_songs2 = json.loads(result.content)
+
+    print(info_added_songs2)
+
 
 # def search_genre_album(token, id_album):
 #     """
@@ -421,7 +462,7 @@ def search_genre_artist(token, id_artist):
 
 token = get_token()
 # id_song, name_song, name_album, name_artist = search_for_id_track(token, "Animals")
-# songs = search_for_id_track(token, "Clarity")
+# songs = search_for_id_track(token, "Classy 101")
 # print(songs)
 # id_song = songs[0]['id_song']
 # info_song = get_info_song(token, id_song)
@@ -448,3 +489,13 @@ token = get_token()
 # genres = search_genre_artist(token, "2LRoIwlKmHjgvigdNGBHNo")
 # print(genres)
 # search_genre_album(token, "1OEGfToF7QbjUgyxMAnGXg")
+
+token = "BQCmpmmx3FRAxhSEg_co0EblaWqduJNi_ZdDYAXY9Lsyqmk0H56-obh1ZoruP8poGZChhLbznCvQTNLMV91t9Zk4ZAw75J_O9PnwqY6GoHyfWO20vI4rP_-drURnjzq1-dp6aAWXAd4RoNttdl5i7cf8Kz0EnBDEh2tXqawM3-zQ0Pomd5lnhGlZFXLmVPrJpZ0lp3TIsl6Cb1CgcEUo4yGTMavjp3WWmCBgodQ3q9PCHe6cjda17BIXd-6qjkx80zlfhe94heo8oaK8"
+
+# playlist_id = create_playlist(token, "31pclsrcv276gv4zqduobdc4nq6q", "Test Playlist 2", "test")
+# songs_uri = ["spotify:track:5UqCQaDshqbIk3pkhy4Pjg", "spotify:track:1sh6lL6cmlcwhqZKGiKBua", 
+#              "spotify:track:1trC8L8YpawkU553ymy2zC", "spotify:track:5jyUBKpmaH670zrXrE0wmO"]
+
+# song_ids = ['1trC8L8YpawkU553ymy2zC', '5jyUBKpmaH670zrXrE0wmO']
+
+# add_songs2_playlist(token, playlist_id, song_ids)
