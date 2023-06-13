@@ -6,22 +6,30 @@ var currentIndex = 0;
 
 function changeDynamicText() {
   var dynamicText = document.getElementById("dynamicText");
-  dynamicText.textContent = words[currentIndex];
-  dynamicText.style.color = colors[currentIndex];
-  currentIndex = (currentIndex + 1) % words.length;
+  if(dynamicText != null){
+    dynamicText.textContent = words[currentIndex];
+    dynamicText.style.color = colors[currentIndex];
+    currentIndex = (currentIndex + 1) % words.length;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  setInterval(changeDynamicText, 2000);
+  var dynamicText = document.getElementById("dynamicText");
+  if(dynamicText != null){
+    setInterval(changeDynamicText, 2000);
+  }
 });
 
 // Blur Effect
 
 document.addEventListener('mousemove', function(e) {
-  var mouseX = e.clientX;
-  var mouseY = e.clientY;
-  var circle = document.querySelector('.circle');
-  
-  circle.setAttribute('cx', mouseX);
-  circle.setAttribute('cy', mouseY - 80);
+  var dynamicText = document.getElementById("dynamicText");
+  if(dynamicText != null){
+    var mouseX = e.clientX;
+    var mouseY = e.clientY;
+    var circle = document.querySelector('.circle');
+    
+    circle.setAttribute('cx', mouseX);
+    circle.setAttribute('cy', mouseY - 80);
+  }
 });

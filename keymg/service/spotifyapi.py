@@ -185,11 +185,11 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
         result = get(query_url, headers=headers)
         result = json.loads(result.content)
         
-        print("For {}:".format(dicc_camelotkey.get(list_harmonic_key_mode[j])))
+        # print("For {}:".format(dicc_camelotkey.get(list_harmonic_key_mode[j])))
         for i in range(len(result['tracks'])):
             info_song = dict()
             name_song = result['tracks'][i]['name']
-            print("Song {}: {}".format(i+1, name_song))
+            # print("Song {}: {}".format(i+1, name_song))
 
             info_song['id_song'] = result['tracks'][i]['id']
             info_song['name_song'] = result['tracks'][i]['name']
@@ -230,7 +230,7 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
         for i in range(len(result['tracks'])):
             info_song = dict()
             name_song = result['tracks'][i]['name']
-            print("Song {}: {}".format(i+1, name_song))
+            # print("Song {}: {}".format(i+1, name_song))
 
             info_song['id_song'] = result['tracks'][i]['id']
             info_song['name_song'] = result['tracks'][i]['name']
@@ -444,6 +444,9 @@ def add_songs2_playlist(token, playlist_id, song_ids):
 
     print(info_added_songs2)
 
+
+def suggestions():
+    return 1
 
 def check_playlist(token, url):
     playlists_dir = os.path.join(this_path, 'playlists')
