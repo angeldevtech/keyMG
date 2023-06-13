@@ -160,11 +160,12 @@ def search_for_audio_features(token, id_song):
 
     key = tracks_features['key']
     mode = tracks_features['mode']
-    bpm = tracks_features['tempo']
+    bpm = round(tracks_features['tempo'])
     camelot_key = dicc_camelotkey[(key, mode)]
     
     #print("Key: {}, Mode: {}, Camelot Key: {},  BPM (tempo): {}".format(key, mode, camelot_key, bpm))
     return key, mode, bpm, camelot_key, tracks_features
+
 
 
 def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, min_bpm, max_bpm, genres):
@@ -172,55 +173,58 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
     Busca las canciones que coinciden con los criterios de key y bpm para que combinen armónicamente
     """
     songs = list()
-    for j in range(len(list_harmonic_key_mode)):
-        url = "https://api.spotify.com/v1/recommendations"
-        headers = get_auth_header(token)
-        key = list_harmonic_key_mode[j][0]
-        mode = list_harmonic_key_mode[j][1]
+    if len(genres) > 0:
+        for j in range(len(list_harmonic_key_mode)):
+            url = "https://api.spotify.com/v1/recommendations"
+            headers = get_auth_header(token)
+            key = list_harmonic_key_mode[j][0]
+            mode = list_harmonic_key_mode[j][1]
 
-        genres_to_search = ','.join(genres)
-        query = f"?seed_genres={genres_to_search}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=15"
+            genres_to_search = ','.join(genres)
+            query = f"?seed_genres={genres_to_search}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=15"
 
-        query_url = url + query
-        result = get(query_url, headers=headers)
-        result = json.loads(result.content)
-        
-        # print("For {}:".format(dicc_camelotkey.get(list_harmonic_key_mode[j])))
-        for i in range(len(result['tracks'])):
-            info_song = dict()
-            name_song = result['tracks'][i]['name']
-            # print("Song {}: {}".format(i+1, name_song))
-
-            info_song['id_song'] = result['tracks'][i]['id']
-            info_song['name_song'] = result['tracks'][i]['name']
+            query_url = url + query
+            result = get(query_url, headers=headers)
+            result = json.loads(result.content)
             
-            info_song['key'], info_song['mode'], info_song['bpm'], info_song['camelot_key'], tracks_features = search_for_audio_features(token, info_song['id_song'])
+            print("For {}:".format(dicc_camelotkey.get(list_harmonic_key_mode[j])))
+            for i in range(len(result['tracks'])):
+                info_song = dict()
+                name_song = result['tracks'][i]['name']
+                print("Song {}: {}".format(i+1, name_song))
 
-            if (info_song['key'] == key) and (info_song['mode'] == mode):
+                info_song['id_song'] = result['tracks'][i]['id']
+                info_song['name_song'] = result['tracks'][i]['name']
+                
+                info_song['key'], info_song['mode'], info_song['bpm'], info_song['camelot_key'], info_song['tracks_features'] = search_for_audio_features(token, info_song['id_song'])
 
-                info_song['name_album'] = result['tracks'][i]['album']['name']
+                if (info_song['key'] == key) and (info_song['mode'] == mode):
 
-                info_song['artists'] = list()
-                for j in range(len(result['tracks'][i]['artists'])):
-                        info_song['artists'].append(result['tracks'][i]['artists'][j]['name'])
+                    info_song['name_album'] = result['tracks'][i]['album']['name']
+
+                    info_song['artists'] = list()
+                    for j in range(len(result['tracks'][i]['artists'])):
+                            info_song['artists'].append(result['tracks'][i]['artists'][j]['name'])
+
+                    
+                    info_song['url'] = result['tracks'][i]['external_urls']['spotify']
+                    info_song['image'] = result['tracks'][i]['album']['images'][0]['url']
+                    duration_seconds = result['tracks'][i]['duration_ms'] / 1000
+                    minutes = int(duration_seconds // 60)
+                    seconds = int(duration_seconds % 60)
+                    info_song['duration'] = str(minutes) + ":" + str(seconds)
 
                 
-                info_song['url'] = result['tracks'][i]['external_urls']['spotify']
-                info_song['image'] = result['tracks'][i]['album']['images'][0]['url']
-                duration_seconds = result['tracks'][i]['duration_ms'] / 1000
-                minutes = int(duration_seconds // 60)
-                seconds = int(duration_seconds % 60)
-                info_song['duration'] = str(minutes) + ":" + str(seconds)
-
-            
-                songs.append(info_song)
-            else:
-                pass
+                    songs.append(info_song)
+                else:
+                    pass
 
 
     if len(songs) == 0:
         url = "https://api.spotify.com/v1/recommendations"
         headers = get_auth_header(token)
+        key = list_harmonic_key_mode[3][0]
+        mode = list_harmonic_key_mode[3][1]
         query = f"?seed_tracks={info_song_search['id_song']}&target_key={key}&min_tempo={min_bpm}&max_tempo={max_bpm}&mode={mode}&limit=40"
 
         query_url = url + query
@@ -230,7 +234,7 @@ def search_songs_for_key_bpm(token, info_song_search, list_harmonic_key_mode, mi
         for i in range(len(result['tracks'])):
             info_song = dict()
             name_song = result['tracks'][i]['name']
-            # print("Song {}: {}".format(i+1, name_song))
+            print("Song {}: {}".format(i+1, name_song))
 
             info_song['id_song'] = result['tracks'][i]['id']
             info_song['name_song'] = result['tracks'][i]['name']
