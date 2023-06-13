@@ -31,7 +31,11 @@ function openModal() {
 }
 
 function closeModal() {
-  modal.style.display = "none";
+    modal.style.display = "none";
+    btnSave.style.display = 'block';
+    btnCancel.style.display = 'block';
+    message.innerHTML = "";
+    playlistUrl.value = '';
 }
 
 function createPlaylist() {
@@ -90,6 +94,7 @@ function loadPlaylists(){
 }
 
 function populateTrackList(data){
+  playlistContainer.innerHTML = '<h2>Trending right now!</h2>'
   data.forEach(element => {
     const playlistElement = document.createElement("div");
     playlistElement.innerHTML = `
