@@ -48,6 +48,8 @@ function createAutocompleteList(response) {
     `; 
     
     listItem.addEventListener('click', () => {
+      clearSuggestions()
+      clearContent()
       startLoading()
       fetchSuggestionsFromAPI(item.id_song)
     });
@@ -83,7 +85,10 @@ function transitionScreen(){
 
 function populateSuggestions(data){
   stopLoading()
-  transitionScreen()
+  var section = document.querySelector(".banner");
+  if(section != null){
+    transitionScreen()
+  }
   setSong(data.song)
   setSuggestions(data.suggestions)
 }
@@ -162,6 +167,10 @@ function clearContent() {
   const autocompleteContainer = document.getElementById('autocomplete-container');
 
   autocompleteContainer.innerHTML = '';
+}
+
+function clearSuggestions() {
+  suggestionsElement.innerHTML = '';
 }
 
 function handleClickOutside(event) {

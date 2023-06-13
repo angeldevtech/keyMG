@@ -124,7 +124,7 @@ function populateTrackList(data){
                   </div>
                   <div class="right">
                     <p>${track.key}</p>
-                    <p>${track.bpm}</p>
+                    <p>${track.bpm}BPM</p>
                     <p>${track.duration}</p>
                   </div>
                 </div>
